@@ -82,6 +82,10 @@ Mogru can be run from a command line. In the `src` folder of the repo, run:
 python main.py
 ```
 
+## Playing
+Gameplay is rudimentary at the moment. Use the arrow keys to move your character (the `@`) 
+on the map and press `Esc` to quit.
+
 <!-- ROADMAP -->
 ## Roadmap
 
