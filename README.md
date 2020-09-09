@@ -110,7 +110,7 @@ Contributions are what make the open source community such an amazing place to b
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the GNU General Public License V3.0. See `COPYING` for more information.
 
 <!-- CONTACT -->
 ## Contact
