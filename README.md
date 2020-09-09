@@ -83,8 +83,26 @@ python main.py
 ```
 
 ## Playing
-Gameplay is rudimentary at the moment. Use the arrow keys to move your character (the `@`) 
-on the map and press `Esc` to quit.
+As with most text-based roguelikes, the player is represented as `@` on the dungeon map.
+
+Navigation of the map uses these keys:
+* `Left arrow`, `H`, `numpad 4`: move left
+* `Right arrow`, `L`, `numpad 6`: move right
+* `Up arrow`, `K`, `numpad 8`: move up
+* `Down arrow`, `J`, `numpad 2`: move down
+* `Home`, `Y`, `numpad 7`: move up/left
+* `Page Up`, `U`, `numpad 9`: move up/right
+* `End`, `B`, `numpad 1`: move down/left
+* `Page Down`, `N`, `numpad 3`: move down/right
+
+Pressing `.` or `numpad 5` skips your turn.
+
+Pressing `Esc` quits the game immediately.
+
+Moving into enemies attacks them. They will attack you. The message log will display the results of your attacks and 
+the enemy's attacks. To see a larger view of the message log, press `V`. You can use the `up arrow`, `down arrow`, 
+`page up`, and `page down` keys to navigate the larger message log view. Press any other key to return to the main 
+game screen.
 
 <!-- ROADMAP -->
 ## Roadmap
