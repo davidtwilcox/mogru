@@ -27,12 +27,17 @@ class Action(ABC):
 
 
 class EscapeAction(Action):
+    """
+    Exits the game.
+    """
+
     def perform(self, engine: Engine, entity: Entity) -> None:
         raise SystemExit()
 
 
-class MovementAction(Action):
-    """Moves the player on screen.
+class ActionWithDirection(Action):
+    """
+    Base for actions with a direction associated.
     """
 
     def __init__(self, dx: int, dy: int):
@@ -42,6 +47,31 @@ class MovementAction(Action):
         self.dy = dy
 
     def perform(self, engine: Engine, entity: Entity) -> None:
+        raise NotImplementedError()
+
+
+class MeleeAction(ActionWithDirection):
+    """
+    Attacks in a direction.
+    """
+
+    def perform(self, engine: Engine, entity: Entity) -> None:
+        dest_x: int = entity.x + self.dx
+        dest_y: int = entity.y + self.dy
+        target = engine.game_map.get_blocking_entity_at_location(dest_x, dest_y)
+        if not target:
+            return
+
+        print(f"You kick the {target.name}, much to its annoyance!")
+
+
+
+class MovementAction(ActionWithDirection):
+    """
+    Moves the player on screen.
+    """
+
+    def perform(self, engine: Engine, entity: Entity) -> None:
         dest_x: int = entity.x + self.dx
         dest_y: int = entity.y + self.dy
 
@@ -49,5 +79,22 @@ class MovementAction(Action):
             return # Destination is out of bounds
         if not engine.game_map.tiles["walkable"][dest_x, dest_y]:
             return # Destination is blocked by a non-walkable tile
+        if engine.game_map.get_blocking_entity_at_location(dest_x, dest_y):
+            return # Destination is blocked by an entity
 
         entity.move(self.dx, self.dy)
+
+
+class BumpAction(ActionWithDirection):
+    """
+    Bumps in a direction.
+    """
+
+    def perform(self, engine: Engine, entity: Entity) -> None:
+        dest_x: int = entity.x + self.dx
+        dest_y: int = entity.y + self.dy
+
+        if engine.game_map.get_blocking_entity_at_location(dest_x, dest_y):
+            return MeleeAction(self.dx, self.dy).perform(engine, entity)
+        else:
+            return MovementAction(self.dx, self.dy).perform(engine, entity)
