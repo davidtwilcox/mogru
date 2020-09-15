@@ -5,7 +5,6 @@ import tcod
 import color
 from engine import Engine
 import entity_factories
-from game_map import GameMap
 from procgen import generate_dungeon
 
 
