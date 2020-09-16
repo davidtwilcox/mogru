@@ -1,7 +1,7 @@
 <p align="center">
     <h3 align="center">Mogru</h3>
     <p align="center">
-        A text-based roguelike game written in Python 3 using TCOD.
+        A text-based roguelike game written in Python 3 using <a href="https://github.com/libtcod/python-tcod">python-tcod</a>.
         <br />
         <a href="https://github.com/bigangryguy/mogru"><strong>Explore the docs »</strong></a>
         <br />
@@ -97,12 +97,18 @@ Navigation of the map uses these keys:
 
 Pressing `.` or `numpad 5` skips your turn.
 
+Pressing `g` picks up an item. Press `i` to open your inventory to use an item and press `d` to open your inventory
+to drop an item. While in your inventory, press the `a` to `z` keys to use the corresponding item or press any other 
+key (or mouse click) to exit the inventory.
+
 Pressing `Esc` quits the game immediately.
 
 Moving into enemies attacks them. They will attack you. The message log will display the results of your attacks and 
 the enemy's attacks. To see a larger view of the message log, press `V`. You can use the `up arrow`, `down arrow`, 
 `page up`, and `page down` keys to navigate the larger message log view. Press any other key to return to the main 
 game screen.
+
+Hovering your mouse pointer over something will display the name of that thing above your message log.
 
 <!-- ROADMAP -->
 ## Roadmap
