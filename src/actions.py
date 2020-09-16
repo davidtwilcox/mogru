@@ -8,7 +8,7 @@ import exceptions
 
 if TYPE_CHECKING:
     from engine import Engine
-    from entity import Actor, Entity
+    from entity import Actor, Entity, Item
 
 
 class Action:
@@ -37,15 +37,6 @@ class Action:
         This method must be overridden by Action subclasses.
         """
         raise NotImplementedError()
-
-
-class EscapeAction(Action):
-    """
-    Exits the game.
-    """
-
-    def perform(self) -> None:
-        raise SystemExit()
 
 
 class WaitAction(Action):
@@ -146,3 +137,60 @@ class BumpAction(ActionWithDirection):
             return MeleeAction(self.entity, self.dx, self.dy).perform()
         else:
             return MovementAction(self.entity, self.dx, self.dy).perform()
+
+
+class ItemAction(Action):
+    """
+    Uses an item.
+    """
+
+    def __init__(self, entity: Actor, item: Item, target_xy: Optional[Tuple[int, int]] = None):
+        super().__init__(entity)
+        self.item = item
+        if not target_xy:
+            target_xy = entity.x, entity.y
+        self.target_xy = target_xy
+
+    @property
+    def target_actor(self) -> Optional[Actor]:
+        """Return the actor at this action's location.
+        """
+        return self.engine.game_map.get_actor_at_location(*self.target_xy)
+
+    def perform(self) -> None:
+        """Invoke the item's ability. This action will be given to provide context.
+        """
+        self.item.consumable.activate(self)
+
+
+class PickupAction(Action):
+    """
+    Pickup an item and add it to the inventory if there is room for it.
+    """
+
+    def __init__(self, entity: Actor):
+        super().__init__(entity)
+
+    def perform(self) -> None:
+        actor_location_x: int = self.entity.x
+        actor_location_y: int = self.entity.y
+        inventory = self.entity.inventory
+
+        for item in self.engine.game_map.items:
+            if actor_location_x == item.x and actor_location_y == item.y:
+                if len(inventory.items) >= inventory.capacity:
+                    raise exceptions.Impossible('Your inventory is full.')
+
+                self.engine.game_map.entities.remove(item)
+                item.parent = self.entity.inventory
+                inventory.items.append(item)
+
+                self.engine.message_log.add_message(f"You picked up the {item.name}!")
+                return
+
+        raise exceptions.Impossible('There is nothing here to pick up.')
+
+
+class DropItem(ItemAction):
+    def perform(self) -> None:
+        self.entity.inventory.drop(self.item)

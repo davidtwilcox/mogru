@@ -12,7 +12,6 @@ from render_functions import render_bar, render_names_at_location
 
 if TYPE_CHECKING:
     from entity import Actor
-    from entity import Entity
     from game_map import GameMap
     from input_handlers import EventHandler
 
@@ -28,7 +27,7 @@ class Engine:
         self.event_handler: EventHandler = MainGameEventHandler(self)
         self.message_log: MessageLog = MessageLog()
         self.mouse_location: Tuple[int, int] = (0, 0)
-        self.player: Entity = player
+        self.player: Actor = player
 
     def handle_enemy_turns(self) -> None:
         for entity in set(self.game_map.actors) - {self.player}:
