@@ -18,14 +18,16 @@ class GameMap:
     Representation of a game map.
     """
 
-    def __init__(self, engine: Engine, width: int, height: int, entities: Iterable[Entity]):
+    def __init__(
+        self, engine: Engine, width: int, height: int, entities: Iterable[Entity]
+    ):
         self.engine: Engine = engine
         self.width, self.height = width, height
         self.entities: Set[Entity] = set(entities)
-        self.tiles = np.full((width, height), fill_value=tile_types.wall, order='F')
+        self.tiles = np.full((width, height), fill_value=tile_types.wall, order="F")
 
-        self.visible = np.full((width, height), fill_value=False, order='F')
-        self.explored = np.full((width, height), fill_value=False, order='F')
+        self.visible = np.full((width, height), fill_value=False, order="F")
+        self.explored = np.full((width, height), fill_value=False, order="F")
 
     @property
     def gamemap(self) -> GameMap:
@@ -33,8 +35,7 @@ class GameMap:
 
     @property
     def actors(self) -> Iterator[Actor]:
-        """Iterate over this map's living actors.
-        """
+        """Iterate over this map's living actors."""
         yield from (
             entity
             for entity in self.entities
@@ -45,9 +46,15 @@ class GameMap:
     def items(self) -> Iterator[Item]:
         yield from (entity for entity in self.entities if isinstance(entity, Item))
 
-    def get_blocking_entity_at_location(self, location_x: int, location_y: int) -> Optional[Entity]:
+    def get_blocking_entity_at_location(
+        self, location_x: int, location_y: int
+    ) -> Optional[Entity]:
         for entity in self.entities:
-            if entity.blocks_movement and entity.x == location_x and entity.y == location_y:
+            if (
+                entity.blocks_movement
+                and entity.x == location_x
+                and entity.y == location_y
+            ):
                 return entity
 
         return None
@@ -60,20 +67,21 @@ class GameMap:
         return None
 
     def in_bounds(self, x: int, y: int) -> bool:
-        """Return True if x and y are inside the bounds of this map.
-        """
+        """Return True if x and y are inside the bounds of this map."""
         return 0 <= x < self.width and 0 <= y < self.height
 
     def render(self, console: Console) -> None:
         """Renders the game map.
 
-        If a tile is in the 'visible' array, then draw it with the 'light' colors.
-        If it isn't, but it's in the 'explored' array, the draw it in the 'dark' colors.
+        If a tile is in the 'visible' array, then draw it with
+        the 'light' colors.
+        If it isn't, but it's in the 'explored' array, the draw
+        it in the 'dark' colors.
         Otherwise, the default is 'SHROUD'.
         """
-        console.tiles_rgb[0:self.width, 0:self.height] = np.select(
+        console.tiles_rgb[0 : self.width, 0 : self.height] = np.select(
             condlist=[self.visible, self.explored],
-            choicelist=[self.tiles['light'], self.tiles['dark']],
+            choicelist=[self.tiles["light"], self.tiles["dark"]],
             default=tile_types.SHROUD,
         )
 
@@ -83,4 +91,6 @@ class GameMap:
 
         for entity in entities_sorted_for_rendering:
             if self.visible[entity.x, entity.y]:
-                console.print(x=entity.x, y=entity.y, string=entity.char, fg=entity.color)
+                console.print(
+                    x=entity.x, y=entity.y, string=entity.char, fg=entity.color
+                )

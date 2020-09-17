@@ -27,8 +27,7 @@ class RectangularRoom:
 
     @property
     def center(self) -> Tuple[int, int]:
-        """Returns the coordinates of the center of the room.
-        """
+        """Returns the coordinates of the center of the room."""
         center_x: int = int((self.x1 + self.x2) / 2)
         center_y: int = int((self.y1 + self.y2) / 2)
 
@@ -36,23 +35,22 @@ class RectangularRoom:
 
     @property
     def inner(self) -> Tuple[slice, slice]:
-        """Returns the inner area of this room as a 2D array index.
-        """
+        """Returns the inner area of this room as a 2D array index."""
         return slice(self.x1 + 1, self.x2), slice(self.y1 + 1, self.y2)
 
     def intersects(self, other: RectangularRoom) -> bool:
-        """Return True if this room intersects with another RectangularRoom.
-        """
+        """Return True if this room intersects with another RectangularRoom."""
         return (
-            self.x1 <= other.x2 and
-            self.x2 >= other.x1 and
-            self.y1 <= other.y2 and
-            self.y2 >= other.y1
+            self.x1 <= other.x2
+            and self.x2 >= other.x1
+            and self.y1 <= other.y2
+            and self.y2 >= other.y1
         )
 
 
-def place_entities(room: RectangularRoom, dungeon: GameMap,
-                   maximum_monsters: int, maximum_items: int) -> None:
+def place_entities(
+    room: RectangularRoom, dungeon: GameMap, maximum_monsters: int, maximum_items: int
+) -> None:
     number_of_monsters: int = random.randint(0, maximum_monsters)
     number_of_items: int = random.randint(0, maximum_items)
 
@@ -79,9 +77,10 @@ def place_entities(room: RectangularRoom, dungeon: GameMap,
                 entity_factories.lightning_scroll.spawn(dungeon, x, y)
 
 
-def tunnel_between(start: Tuple[int, int], end: Tuple[int, int]) -> Iterator[Tuple[int, int]]:
-    """Returns an L-shaped tunnel between two points.
-    """
+def tunnel_between(
+    start: Tuple[int, int], end: Tuple[int, int]
+) -> Iterator[Tuple[int, int]]:
+    """Returns an L-shaped tunnel between two points."""
     x1, y1 = start
     x2, y2 = end
     if random.random() < 0.5:
@@ -95,14 +94,17 @@ def tunnel_between(start: Tuple[int, int], end: Tuple[int, int]) -> Iterator[Tup
         yield x, y
 
 
-def generate_dungeon(max_rooms: int,
-                     room_min_size: int, room_max_size: int,
-                     map_width: int, map_height: int,
-                     max_monsters_per_room: int,
-                     max_items_per_room: int,
-                     engine: Engine) -> GameMap:
-    """Generates a new dungeon map.
-    """
+def generate_dungeon(
+    max_rooms: int,
+    room_min_size: int,
+    room_max_size: int,
+    map_width: int,
+    map_height: int,
+    max_monsters_per_room: int,
+    max_items_per_room: int,
+    engine: Engine,
+) -> GameMap:
+    """Generates a new dungeon map."""
     player: Entity = engine.player
     dungeon: GameMap = GameMap(engine, map_width, map_height, entities=[player])
 

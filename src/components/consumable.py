@@ -20,8 +20,7 @@ class Consumable(BaseComponent):
     parent: Item
 
     def get_action(self, consumer: Actor) -> Optional[actions.Action]:
-        """Try to return the action for this item.
-        """
+        """Try to return the action for this item."""
         return actions.ItemAction(consumer, self.parent)
 
     def activate(self, action: actions.ItemAction) -> None:
@@ -32,8 +31,7 @@ class Consumable(BaseComponent):
         raise NotImplementedError()
 
     def consume(self) -> None:
-        """Remove the consumed item from its containing inventory.
-        """
+        """Remove the consumed item from its containing inventory."""
         entity = self.parent
         inventory = entity.parent
         if isinstance(inventory, components.inventory.Inventory):
@@ -54,12 +52,14 @@ class HealingConsumable(Consumable):
 
         if amount_recovered > 0:
             self.engine.message_log.add_message(
-                f"You consume the {self.parent.name} and recover {amount_recovered} HP!",
+                f"You consume the {self.parent.name} "
+                + f"and recover {amount_recovered} HP!",
                 color.health_recovered,
             )
             self.consume()
         else:
-            raise Impossible(f"Your health is already full.")
+            raise Impossible("Your health is already full.")
+
 
 class LightningDamageConsumable(Consumable):
     """
@@ -85,7 +85,8 @@ class LightningDamageConsumable(Consumable):
 
         if target:
             self.engine.message_log.add_message(
-                f"A lightning bolt strikes the {target.name} with a loud thunderclap, for {self.damage} damage!"
+                f"A lightning bolt strikes the {target.name} "
+                + f"with a loud thunderclap, for {self.damage} damage!"
             )
             target.fighter.take_damage(self.damage)
             self.consume()

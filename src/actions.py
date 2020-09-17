@@ -22,8 +22,7 @@ class Action:
 
     @property
     def engine(self) -> Engine:
-        """Return the engine this action belongs to.
-        """
+        """Return the engine this action belongs to."""
         return self.entity.gamemap.engine
 
     @abstractmethod
@@ -61,20 +60,17 @@ class ActionWithDirection(Action):
 
     @property
     def dest_xy(self) -> Tuple[int, int]:
-        """Returns this action's destination.
-        """
+        """Returns this action's destination."""
         return self.entity.x + self.dx, self.entity.y + self.dy
 
     @property
     def blocking_entity(self) -> Optional[Entity]:
-        """Return the blocking entity at this action's destination.
-        """
+        """Return the blocking entity at this action's destination."""
         return self.engine.game_map.get_blocking_entity_at_location(*self.dest_xy)
 
     @property
     def target_actor(self) -> Optional[Actor]:
-        """Return the actor at this action's destination.
-        """
+        """Return the actor at this action's destination."""
         return self.engine.game_map.get_actor_at_location(*self.dest_xy)
 
     @abstractmethod
@@ -90,7 +86,7 @@ class MeleeAction(ActionWithDirection):
     def perform(self) -> None:
         target: Actor = self.target_actor
         if not target:
-            raise exceptions.Impossible('Nothing to attack.')
+            raise exceptions.Impossible("Nothing to attack.")
 
         damage: int = self.entity.fighter.power - target.fighter.defense
 
@@ -100,10 +96,14 @@ class MeleeAction(ActionWithDirection):
         else:
             attack_color = color.enemy_atk
         if damage > 0:
-            self.engine.message_log.add_message(f"{attack_desc} for {damage} hit points.", attack_color)
+            self.engine.message_log.add_message(
+                f"{attack_desc} for {damage} hit points.", attack_color
+            )
             target.fighter.hp -= damage
         else:
-            self.engine.message_log.add_message(f"{attack_desc} but does no damage.", attack_color)
+            self.engine.message_log.add_message(
+                f"{attack_desc} but does no damage.", attack_color
+            )
 
 
 class MovementAction(ActionWithDirection):
@@ -116,13 +116,13 @@ class MovementAction(ActionWithDirection):
 
         if not self.engine.game_map.in_bounds(dest_x, dest_y):
             # Destination is out of bounds
-            raise exceptions.Impossible('That way is blocked.')
+            raise exceptions.Impossible("That way is blocked.")
         if not self.engine.game_map.tiles["walkable"][dest_x, dest_y]:
             # Destination is blocked by a non-walkable tile
-            raise exceptions.Impossible('That way is blocked.')
+            raise exceptions.Impossible("That way is blocked.")
         if self.engine.game_map.get_blocking_entity_at_location(dest_x, dest_y):
             # Destination is blocked by an entity
-            raise exceptions.Impossible('That way is blocked.')
+            raise exceptions.Impossible("That way is blocked.")
 
         self.entity.move(self.dx, self.dy)
 
@@ -144,7 +144,9 @@ class ItemAction(Action):
     Uses an item.
     """
 
-    def __init__(self, entity: Actor, item: Item, target_xy: Optional[Tuple[int, int]] = None):
+    def __init__(
+        self, entity: Actor, item: Item, target_xy: Optional[Tuple[int, int]] = None
+    ):
         super().__init__(entity)
         self.item = item
         if not target_xy:
@@ -153,13 +155,12 @@ class ItemAction(Action):
 
     @property
     def target_actor(self) -> Optional[Actor]:
-        """Return the actor at this action's location.
-        """
+        """Return the actor at this action's location."""
         return self.engine.game_map.get_actor_at_location(*self.target_xy)
 
     def perform(self) -> None:
-        """Invoke the item's ability. This action will be given to provide context.
-        """
+        """Invoke the item's ability. This action will be given to provide
+        context."""
         self.item.consumable.activate(self)
 
 
@@ -179,7 +180,7 @@ class PickupAction(Action):
         for item in self.engine.game_map.items:
             if actor_location_x == item.x and actor_location_y == item.y:
                 if len(inventory.items) >= inventory.capacity:
-                    raise exceptions.Impossible('Your inventory is full.')
+                    raise exceptions.Impossible("Your inventory is full.")
 
                 self.engine.game_map.entities.remove(item)
                 item.parent = self.entity.inventory
@@ -188,7 +189,7 @@ class PickupAction(Action):
                 self.engine.message_log.add_message(f"You picked up the {item.name}!")
                 return
 
-        raise exceptions.Impossible('There is nothing here to pick up.')
+        raise exceptions.Impossible("There is nothing here to pick up.")
 
 
 class DropItem(ItemAction):

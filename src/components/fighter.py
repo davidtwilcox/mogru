@@ -54,14 +54,14 @@ class Fighter(BaseComponent):
 
     def die(self) -> None:
         if self.engine.player is self.parent:
-            death_message: str = 'You died!'
+            death_message: str = "You died!"
             death_message_color = color.player_die
             self.engine.event_handler = GameOverEventHandler(self.engine)
         else:
             death_message: str = f"{self.parent.name} is dead!"
             death_message_color = color.enemy_die
 
-        self.parent.char = '%'
+        self.parent.char = "%"
         self.parent.color = (191, 0, 0)
         self.parent.blocks_movement = False
         self.parent.ai = None

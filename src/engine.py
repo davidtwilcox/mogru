@@ -38,10 +38,9 @@ class Engine:
                     pass
 
     def update_fov(self) -> None:
-        """Recompute the visible area based on the player's field of view.
-        """
+        """Recompute the visible area based on the player's field of view."""
         self.game_map.visible[:] = compute_fov(
-            self.game_map.tiles['transparent'],
+            self.game_map.tiles["transparent"],
             (self.player.x, self.player.y),
             radius=8,
         )

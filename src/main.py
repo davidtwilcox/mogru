@@ -23,7 +23,9 @@ def main() -> None:
     max_monsters_per_room: int = 2
     max_items_per_room: int = 2
 
-    tileset = tcod.tileset.load_tilesheet('dejavu10x10_gs_tc.png', 32, 8, tcod.tileset.CHARMAP_TCOD)
+    tileset = tcod.tileset.load_tilesheet(
+        "dejavu10x10_gs_tc.png", 32, 8, tcod.tileset.CHARMAP_TCOD
+    )
 
     player = copy.deepcopy(entity_factories.player)
 
@@ -46,13 +48,9 @@ def main() -> None:
     )
 
     with tcod.context.new_terminal(
-        screen_width,
-        screen_height,
-        tileset=tileset,
-        title='Mogru',
-        vsync=True
+        screen_width, screen_height, tileset=tileset, title="Mogru", vsync=True
     ) as context:
-        root_console = tcod.Console(screen_width, screen_height, order='F')
+        root_console = tcod.Console(screen_width, screen_height, order="F")
         while True:
             root_console.clear()
             engine.event_handler.on_render(console=root_console)
@@ -67,5 +65,5 @@ def main() -> None:
                 engine.message_log.add_message(traceback.format_exc(), color.error)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
