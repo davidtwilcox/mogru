@@ -101,6 +101,8 @@ Pressing `g` picks up an item. Press `i` to open your inventory to use an item a
 to drop an item. While in your inventory, press the `a` to `z` keys to use the corresponding item or press any other 
 key (or mouse click) to exit the inventory.
 
+Press `c` to open the character information panel. Press any to close the panel.
+
 Pressing `Esc` quits the game immediately.
 
 Moving into enemies attacks them. They will attack you. The message log will display the results of your attacks and 
